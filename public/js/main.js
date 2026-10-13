@@ -1,5 +1,6 @@
 // Shared header/footer injection + cart state (localStorage).
 const CART_KEY = 'lunia_cart';
+const DELIVERY_FEE = 49;
 
 function getCart() {
   try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
@@ -70,6 +71,41 @@ function flash(msg) {
 
 function money(n) {
   return '₹' + Number(n).toFixed(2);
+}
+
+// Shared cart renderer (used by cart.html; safe to call on any page).
+function renderCart() {
+  const box = document.getElementById('cart');
+  if (!box) return;
+  const cart = getCart();
+  if (!cart.length) {
+    box.innerHTML = '<p class="alert">Your cart is empty. <a href="shop.html">Browse products</a>.</p>';
+    return;
+  }
+  const subtotal = cartSubtotal();
+  box.innerHTML = `
+    ${cart.map(it => `
+      <div class="line">
+        <div class="info">
+          <div class="name">${it.name}</div>
+          <div class="muted">${money(it.price)} / ${it.unit}</div>
+        </div>
+        <div class="qty">
+          <button onclick="changeQuantity('${it.id}', -1)">−</button>
+          <span>${it.quantity}</span>
+          <button onclick="changeQuantity('${it.id}', 1)">+</button>
+        </div>
+        <div class="line-total">${money(it.price * it.quantity)}</div>
+        <button class="add-btn" style="margin:0" onclick="removeFromCart('${it.id}')">Remove</button>
+      </div>`).join('')}
+    <div class="totals">
+      <div class="row"><span>Subtotal</span><span>${money(subtotal)}</span></div>
+      <div class="row"><span>Delivery</span><span>${money(DELIVERY_FEE)}</span></div>
+      <div class="row grand"><span>Total</span><span>${money(subtotal + DELIVERY_FEE)}</span></div>
+    </div>
+    <div style="margin-top:1.5rem; text-align:right;">
+      <a class="btn" href="checkout.html">Proceed to checkout</a>
+    </div>`;
 }
 
 function injectShell(active) {
