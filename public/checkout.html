@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout — Lunia Foods</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="shop">
+  <header class="site-header" id="site-header"></header>
+
+  <main class="container page">
+    <h1>Checkout</h1>
+    <div id="empty" class="alert" style="display:none">Your cart is empty. <a href="shop.html">Browse products</a>.</div>
+    <form id="checkout-form" style="max-width:720px">
+      <div class="form-row">
+        <div class="field"><label>Full name *</label><input name="customerName" required></div>
+        <div class="field"><label>Email *</label><input name="email" type="email" required></div>
+        <div class="field"><label>Phone</label><input name="phone"></div>
+        <div class="field"><label>City *</label><input name="city" required></div>
+        <div class="field full"><label>Delivery address *</label><textarea name="address" rows="3" required></textarea></div>
+        <div class="field"><label>Postal code</label><input name="postalCode"></div>
+        <div class="field"><label>Order notes</label><input name="notes" placeholder="Leave at door, etc."></div>
+      </div>
+      <div class="totals" style="margin:0 0 1.5rem">
+        <div class="row"><span>Subtotal</span><span id="sum-subtotal"></span></div>
+        <div class="row"><span>Delivery</span><span id="sum-shipping"></span></div>
+        <div class="row grand"><span>Total</span><span id="sum-total"></span></div>
+      </div>
+      <button class="btn" type="submit">Place order</button>
+      <p class="alert" id="msg" style="display:none"></p>
+    </form>
+  </main>
+
+  <footer class="site-footer" id="site-footer"></footer>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!getCart().length) {
+        document.getElementById('empty').style.display = 'block';
+        document.getElementById('checkout-form').style.display = 'none';
+        return;
+      }
+      const subtotal = cartSubtotal();
+      const shipping = 49;
+      document.getElementById('sum-subtotal').textContent = money(subtotal);
+      document.getElementById('sum-shipping').textContent = money(shipping);
+      document.getElementById('sum-total').textContent = money(subtotal + shipping);
+    });
+
+    document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const subtotal = cartSubtotal();
+      const shipping = 49;
+      const payload = {
+        customerName: fd.get('customerName'),
+        email: fd.get('email'),
+        phone: fd.get('phone'),
+        address: fd.get('address'),
+        city: fd.get('city'),
+        postalCode: fd.get('postalCode'),
+        notes: fd.get('notes'),
+        items: getCart(),
+        subtotal,
+        shipping,
+        total: subtotal + shipping
+      };
+
+      const msg = document.getElementById('msg');
+      try {
+        const res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) { msg.textContent = data.error || 'Order failed'; msg.style.display = 'block'; return; }
+        localStorage.removeItem(CART_KEY);
+        location.href = `order-confirmation.html?id=${data.id}`;
+      } catch (err) {
+        msg.textContent = 'Network error — please try again.';
+        msg.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

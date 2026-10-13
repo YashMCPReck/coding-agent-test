@@ -1,0 +1,82 @@
+[
+  {
+    "id": "heirloom-tomatoes",
+    "name": "Heirloom Tomatoes",
+    "category": "produce",
+    "price": 4.5,
+    "unit": "500g",
+    "image": "img/products/placeholder.svg",
+    "description": "Sun-ripened vine tomatoes in mixed colours, grown without synthetic pesticides.",
+    "stock": 24
+  },
+  {
+    "id": "avocado-hass",
+    "name": "Hass Avocados",
+    "category": "produce",
+    "price": 3.2,
+    "unit": "2 pack",
+    "image": "img/products/placeholder.svg",
+    "description": "Creamy, ready-to-eat Hass avocados, perfect for toast and salads.",
+    "stock": 18
+  },
+  {
+    "id": "sourdough-loaf",
+    "name": "Stonebaked Sourdough",
+    "category": "bakery",
+    "price": 5.0,
+    "unit": "800g",
+    "image": "img/products/placeholder.svg",
+    "description": "Slow-fermented 48-hour sourdough with a crackly crust and open crumb.",
+    "stock": 12
+  },
+  {
+    "id": "pastured-eggs",
+    "name": "Pastured Eggs",
+    "category": "dairy",
+    "price": 6.5,
+    "unit": "dozen",
+    "image": "img/products/placeholder.svg",
+    "description": "Free-range eggs from pasture-raised hens, deep orange yolks.",
+    "stock": 30
+  },
+  {
+    "id": "raw-honey",
+    "name": "Raw Wildflower Honey",
+    "category": "pantry",
+    "price": 9.0,
+    "unit": "340g jar",
+    "image": "img/products/placeholder.svg",
+    "description": "Unfiltered, single-origin wildflower honey from local apiaries.",
+    "stock": 15
+  },
+  {
+    "id": "olive-oil",
+    "name": "Cold-Pressed Olive Oil",
+    "category": "pantry",
+    "price": 14.0,
+    "unit": "500ml",
+    "image": "img/products/placeholder.svg",
+    "description": "Extra-virgin olive oil, first cold press with a peppery finish.",
+    "stock": 20
+  },
+  {
+    "id": "kombucha",
+    "name": "Ginger Kombucha",
+    "category": "beverages",
+    "price": 4.0,
+    "unit": "330ml",
+    "image": "img/products/placeholder.svg",
+    "description": "Small-batch fermented kombucha with fresh ginger and lemon.",
+    "stock": 22
+  },
+  {
+    "id": "granola",
+    "name": "Maple Nut Granola",
+    "category": "bakery",
+    "price": 7.5,
+    "unit": "400g",
+    "image": "img/products/placeholder.svg",
+    "description": "Crunchy oat clusters with maple syrup, almonds and seeds.",
+    "stock": 16
+  }
+]

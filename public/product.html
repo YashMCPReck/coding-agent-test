@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product — Lunia Foods</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="shop">
+  <header class="site-header" id="site-header"></header>
+
+  <main class="container page">
+    <div id="product" style="display:flex; gap:2rem; flex-wrap:wrap;">
+      <img id="p-image" src="" alt="" style="width:100%; max-width:420px; border-radius:14px; background:#efe7da; object-fit:cover;">
+      <div style="flex:1; min-width:260px;">
+        <h1 id="p-name"></h1>
+        <p class="muted" id="p-category"></p>
+        <p id="p-desc"></p>
+        <p style="font-size:1.6rem; font-weight:700; color:var(--green)" id="p-price"></p>
+        <button class="btn" id="add-btn">Add to cart</button>
+        <p class="alert" id="msg" style="display:none"></p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer" id="site-footer"></footer>
+  <script src="js/main.js"></script>
+  <script>
+    (async () => {
+      const id = new URLSearchParams(location.search).get('id');
+      const res = await fetch(`/api/products/${id}`);
+      if (!res.ok) {
+        document.getElementById('product').innerHTML = '<p class="alert">Product not found.</p>';
+        return;
+      }
+      const p = await res.json();
+      document.getElementById('p-image').src = p.image;
+      document.getElementById('p-image').alt = p.name;
+      document.getElementById('p-name').textContent = p.name;
+      document.getElementById('p-category').textContent = `${p.category} · ${p.unit}`;
+      document.getElementById('p-desc').textContent = p.description;
+      document.getElementById('p-price').textContent = money(p.price);
+      document.getElementById('add-btn').addEventListener('click', () => addToCart(p.id, p.name, p.price, p.unit));
+    })();
+  </script>
+</body>
+</html>
