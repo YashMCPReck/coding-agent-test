@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shop — Lunia Foods</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="shop">
+  <header class="site-header" id="site-header"></header>
+
+  <main class="container page">
+    <h1>Shop</h1>
+    <div class="field" style="max-width:320px">
+      <input id="search" type="search" placeholder="Search products…">
+    </div>
+    <div class="grid" id="products"></div>
+  </main>
+
+  <footer class="site-footer" id="site-footer"></footer>
+  <script src="js/main.js"></script>
+  <script>
+    async function render(q = '') {
+      const grid = document.getElementById('products');
+      try {
+        const url = q ? `/api/products?q=${encodeURIComponent(q)}` : '/api/products';
+        const products = await (await fetch(url)).json();
+        grid.innerHTML = products.length ? products.map(p => `
+          <div class="card">
+            <img src="${p.image}" alt="${p.name}">
+            <div class="body">
+              <h3>${p.name}</h3>
+              <span class="muted">${p.category} · ${p.unit}</span>
+              <span class="price">${money(p.price)}</span>
+              <div class="actions">
+                <a class="add-btn" href="product.html?id=${p.id}">View</a>
+              </div>
+            </div>
+          </div>`).join('') : '<p class="alert">No products found.</p>';
+      } catch (e) {
+        grid.innerHTML = '<p class="alert">Could not load products.</p>';
+      }
+    }
+    document.getElementById('search').addEventListener('input', (e) => render(e.target.value));
+    document.addEventListener('DOMContentLoaded', () => render());
+  </script>
+</body>
+</html>

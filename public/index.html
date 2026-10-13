@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lunia Foods — Fresh, Local Groceries</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="home">
+  <header class="site-header" id="site-header"></header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Fresh from the farm, straight to your door</h1>
+      <p>Seasonal produce, small-batch pantry staples and stonebaked bread — all sourced from growers we know by name.</p>
+      <a class="btn" href="shop.html">Shop now</a>
+    </section>
+
+    <section style="padding:1rem 0 3rem">
+      <h2>Bestsellers</h2>
+      <div class="grid" id="featured"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="site-footer"></footer>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const res = await fetch('/api/products');
+        const products = await res.json();
+        const grid = document.getElementById('featured');
+        grid.innerHTML = products.slice(0, 4).map(p => `
+          <div class="card">
+            <img src="${p.image}" alt="${p.name}">
+            <div class="body">
+              <h3>${p.name}</h3>
+              <span class="muted">${p.unit}</span>
+              <span class="price">${money(p.price)}</span>
+              <div class="actions">
+                <a class="add-btn" href="product.html?id=${p.id}">View</a>
+              </div>
+            </div>
+          </div>`).join('');
+      } catch (e) {
+        document.getElementById('featured').innerHTML = '<p class="alert">Could not load products.</p>';
+      }
+    });
+  </script>
+</body>
+</html>

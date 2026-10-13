@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order confirmed — Lunia Foods</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="shop">
+  <header class="site-header" id="site-header"></header>
+
+  <main class="container page">
+    <div id="content" class="prose">
+      <h1>Thank you — order confirmed 🎉</h1>
+      <p class="alert" id="order-id">Loading…</p>
+      <h2>Order summary</h2>
+      <div id="items"></div>
+      <div class="totals" style="margin:0">
+        <div class="row"><span>Subtotal</span><span id="sum-subtotal"></span></div>
+        <div class="row"><span>Delivery</span><span id="sum-shipping"></span></div>
+        <div class="row grand"><span>Total</span><span id="sum-total"></span></div>
+      </div>
+      <p style="margin-top:1.5rem"><a class="btn" href="shop.html">Continue shopping</a></p>
+    </div>
+  </main>
+
+  <footer class="site-footer" id="site-footer"></footer>
+  <script src="js/main.js"></script>
+  <script>
+    (async () => {
+      const id = new URLSearchParams(location.search).get('id');
+      const res = await fetch(`/api/orders/${id}`);
+      if (!res.ok) {
+        document.getElementById('content').innerHTML = '<p class="alert">Order not found.</p>';
+        return;
+      }
+      const o = await res.json();
+      document.getElementById('order-id').textContent = `Your order number is ${o.id}`;
+      document.getElementById('items').innerHTML = o.items.map(it => `
+        <div class="line">
+          <div class="info"><div class="name">${it.name}</div><div class="muted">× ${it.quantity}</div></div>
+          <div class="line-total">${money(it.price * it.quantity)}</div>
+        </div>`).join('');
+      document.getElementById('sum-subtotal').textContent = money(o.subtotal);
+      document.getElementById('sum-shipping').textContent = money(o.shipping);
+      document.getElementById('sum-total').textContent = money(o.total);
+    })();
+  </script>
+</body>
+</html>
